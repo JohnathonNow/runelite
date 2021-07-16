@@ -756,6 +756,7 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
+	int floppyboi = -30;
 	@Override
 	public void drawScene(int cameraX, int cameraY, int cameraZ, int cameraPitch, int cameraYaw, int plane)
 	{
@@ -778,11 +779,11 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 				.put(client.getCenterX())
 				.put(client.getCenterY())
 				.put(client.getScale())
-				.put(cameraX)
+				.put(cameraX + floppyboi)
 				.put(cameraY)
 				.put(cameraZ);
 			uniformBuf.flip();
-
+			floppyboi = -floppyboi;
 			gl.glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer.glBufferId);
 			gl.glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBuf.limit() * Integer.BYTES, uniformBuf);
 			gl.glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -1090,7 +1091,7 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		// Clear scene
 		int sky = client.getSkyboxColor();
 		gl.glClearColor((sky >> 16 & 0xFF) / 255f, (sky >> 8 & 0xFF) / 255f, (sky & 0xFF) / 255f, 1f);
-		gl.glClear(gl.GL_COLOR_BUFFER_BIT);
+		//gl.glClear(gl.GL_COLOR_BUFFER_BIT);
 
 		// Draw 3d scene
 		final TextureProvider textureProvider = client.getTextureProvider();
@@ -1108,7 +1109,7 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 			int renderWidthOff = client.getViewportXOffset();
 			int renderCanvasHeight = canvasHeight;
 			int renderViewportHeight = viewportHeight;
-			int renderViewportWidth = viewportWidth;
+			int renderViewportWidth = viewportWidth ;
 
 			// Setup anisotropic filtering
 			final int anisotropicFilteringLevel = config.anisotropicFilteringLevel();
@@ -1162,7 +1163,7 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 			projectionMatrix.multMatrix(makeProjectionMatrix(viewportWidth, viewportHeight, 50));
 			projectionMatrix.rotate((float) (Math.PI - pitch * Perspective.UNIT), -1, 0, 0);
 			projectionMatrix.rotate((float) (yaw * Perspective.UNIT), 0, 1, 0);
-			projectionMatrix.translate(-client.getCameraX2(), -client.getCameraY2(), -client.getCameraZ2());
+			projectionMatrix.translate(floppyboi-client.getCameraX2(), -client.getCameraY2(), -client.getCameraZ2());
 			gl.glUniformMatrix4fv(uniProjectionMatrix, 1, false, projectionMatrix.getMatrix(), 0);
 
 			for (int id = 0; id < textures.length; ++id)
@@ -1297,6 +1298,7 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glBindTexture(gl.GL_TEXTURE_2D, interfaceTexture);
 
+		// commenting this out removed all the stuff
 		gl.glTexSubImage2D(gl.GL_TEXTURE_2D, 0, 0, 0, width, height, gl.GL_BGRA, gl.GL_UNSIGNED_INT_8_8_8_8_REV, interfaceBuffer);
 
 		// Use the texture bound in the first pass
@@ -1520,7 +1522,7 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 				model.calculateExtreme(orientation);
 				client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
 
-				modelX = x + client.getCameraX2();
+				modelX = x + client.getCameraX2() + floppyboi;
 				modelY = y + client.getCameraY2();
 				modelZ = z + client.getCameraZ2();
 				modelOrientation = orientation;
@@ -1669,10 +1671,12 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		{
 			final Graphics2D graphics = (Graphics2D) canvas.getGraphics();
 			final AffineTransform t = graphics.getTransform();
-			gl.glViewport(
-				getScaledValue(t.getScaleX(), x),
+			int width2 = getScaledValue(t.getScaleX(), width) / 2;
+			int offset = floppyboi > 0? width2 : 0;
+					gl.glViewport(
+				getScaledValue(t.getScaleX(), x) + offset,
 				getScaledValue(t.getScaleY(), y),
-				getScaledValue(t.getScaleX(), width),
+				width2,
 				getScaledValue(t.getScaleY(), height));
 			graphics.dispose();
 		}
