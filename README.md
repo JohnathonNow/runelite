@@ -1,27 +1,13 @@
-![](https://runelite.net/img/logo.png)
-# runelite [![CI](https://github.com/runelite/runelite/workflows/CI/badge.svg)](https://github.com/runelite/runelite/actions?query=workflow%3ACI+branch%3Amaster) [![Discord](https://img.shields.io/discord/301497432909414422.svg)](https://discord.gg/ArdAhnN)
+# runelite-3d  
+This is a fork of runelite that renders the game in side-by-side 3D. If all
+goes according to plan it will become a plugin rather than a fork - it is
+only a fork to make it easy for me to figure out if it's even feasible.
 
-RuneLite is a free, open source OldSchool RuneScape client.
-
-If you have any questions, please join our IRC channel on [irc.rizon.net #runelite](http://qchat.rizon.net/?channels=runelite&uio=d4) or alternatively our [Discord](https://discord.gg/ArdAhnN) server.
-
-## Project Layout
-
-- [cache](cache/src/main/java/net/runelite/cache) - Libraries used for reading/writing cache files, as well as the data in it
-- [http-api](http-api/src/main/java/net/runelite/http/api) - API for api.runelite.net
-- [http-service](http-service/src/main/java/net/runelite/http/service) - Service for api.runelite.net
-- [runelite-api](runelite-api/src/main/java/net/runelite/api) - RuneLite API, interfaces for accessing the client
-- [runelite-client](runelite-client/src/main/java/net/runelite/client) - Game client with plugins
-
-## Usage
-
-Open the project in your IDE as a Maven project, build the root module and then run the RuneLite class in runelite-client.  
-For more information visit the [RuneLite Wiki](https://github.com/runelite/runelite/wiki).
-
-### License
-
-RuneLite is licensed under the BSD 2-clause license. See the license header in the respective file to be sure.
-
-## Contribute and Develop
-
-We've set up a separate document for our [contribution guidelines](https://github.com/runelite/runelite/blob/master/.github/CONTRIBUTING.md).
+## Status  
+Currently the 3D geometry of the game renders correctly side by side with a
+camera offset, so the basic idea is there. However, other things
+aren't perfect yet:  
+ - Everything in 2D (chat, the HUD, etc.) flickers between the two eyes (no clue how to fix atm)  
+ - The mouse does not map correctly to the game (not sure how to fix)  
+ - The camera eyes do not rotate yet (easy fix)  
+ - Pupil distance is fixed and probably wrong (easy fix)
